@@ -1,0 +1,22 @@
+services:
+  - type: cron
+    name: ecr-token-refresh
+    runtime: python
+    plan: starter
+    # ECR tokens last 12h; refreshing every 6h tolerates one missed or failed run.
+    schedule: "0 */6 * * *"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python refresh.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: AWS_ROLE_ARN
+        sync: false
+      - key: AWS_REGION
+        sync: false
+      - key: RENDER_API_KEY
+        sync: false
+      - key: RENDER_WORKSPACE_ID
+        sync: false
+      - key: REGISTRY_CREDENTIAL_NAME
+        value: aws-ecr
